@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Government Schemes for Farmers</title>
+    <style>
+        /* Global Styling */
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+
+        /* Header Styling */
+        .header {
+            background-color: green;
+            color: white;
+            text-align: center;
+            padding: 40px 0;
+            box-shadow: 0 4px 8px green;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 40px;
+        }
+
+        /* Content Styling */
+        .content {
+            padding: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h2 {
+            font-size: 28px;
+            color: #2d3e50;
+            margin-bottom: 20px;
+            border-bottom: 3px solid green;
+            padding-bottom: 10px;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        li {
+            font-size: 20px;
+            margin: 15px 0;
+            line-height: 1.6;
+        }
+
+        a {
+            color: darkgreen;
+            text-decoration: none;
+            font-weight: bold;
+            transition: color 0.3s ease, text-decoration 0.3s ease;
+        }
+
+        a:hover {
+            color: #0056b3;
+            text-decoration: underline;
+        }
+
+        /* Notification styling */
+        #notification {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #28a745;
+            color: white;
+            padding: 15px;
+            border-radius: 5px;
+            display: none;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            font-size: 18px;
+        }
+
+        #notification a {
+            color: white;
+            font-weight: normal;
+            text-decoration: underline;
+        }
+
+        #notification button {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 20px;
+            float: right;
+            cursor: pointer;
+        }
+
+        /* Mobile Responsiveness */
+        @media screen and (max-width: 600px) {
+            .header h1 {
+                font-size: 32px;
+            }
+            h2 {
+                font-size: 22px;
+            }
+            li {
+                font-size: 18px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Government Schemes for Farmers / किसानों के लिए सरकारी योजनाएं</h1>
+    </div>
+
+    <div class="content">
+        <h2>Health and Insurance Schemes / स्वास्थ्य और बीमा योजनाएं</h2>
+        <ul>
+            <li><a href="https://www.pmjay.gov.in/" target="_blank">Pradhan Mantri Jan Arogya Yojana (PMJAY) - Apply / प्रधान मंत्री जन आरोग्य योजना (PMJAY) - आवेदन करें</a></li>
+          
+        </ul>
+
+        <h2>Loan Schemes / ऋण योजनाएं</h2>
+        <ul>
+            <li><a href="https://www.mudra.org.in/" target="_blank">MUDRA Loan Scheme - Apply / MUDRA ऋण योजना - आवेदन करें</a></li>
+
+        </ul>
+
+        <h2>Farming and Crop Insurance Schemes / कृषि और फसल बीमा योजनाएं</h2>
+        <ul>
+            <li><a href="https://pmfby.gov.in/" target="_blank">Pradhan Mantri Fasal Bima Yojana (PMFBY) - Apply / प्रधान मंत्री फसल बीमा योजना (PMFBY) - आवेदन करें</a></li>
+
+        </ul>
+
+        <h2>Family and Welfare Schemes / परिवार और कल्याण योजनाएं</h2>
+        <ul>
+            <li><a href="https://www.pmksy.gov.in/" target="_blank">Pradhan Mantri Krishi Sinchayee Yojana (PMKSY) - Apply / प्रधान मंत्री कृषि सिंचाई योजना (PMKSY) - आवेदन करें</a></li>
+          
+        </ul>
+    </div>
+
+    <!-- Notification Bar -->
+    <div id="notification">
+        <span>New scheme launched! <a href="https://www.example.com" target="_blank">Click here to check out the latest scheme / नई योजना लॉन्च हुई! <a href="https://www.example.com" target="_blank">यहां क्लिक करें नवीनतम योजना देखने के लिए</a></span>
+        <button id="close-notification">&times;</button>
+    </div>
+
+    <script>
+        // Example JS for interaction or simple functions, like alerting when a link is clicked
+        document.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                alert("You are now being redirected to the official government website / आप अब सरकारी वेबसाइट पर जा रहे हैं।");
+            });
+        });
+        
+        // Function to check for new updates
+        function checkForUpdates() {
+            fetch('https://api.example.com/latest-schemes')  // Use the actual API URL or the government webpage data if available
+                .then(response => response.json())
+                .then(data => {
+                    // Check if there is a new update
+                    if (data.isNewUpdate) {
+                        showNotification();
+                    }
+                })
+                .catch(error => console.error('Error fetching updates:', error));
+        }
+        
+        // Function to show a browser notification
+        function showNotification() {
+            // Check if the browser supports notifications
+            if (Notification.permission === "granted") {
+                const notification = new Notification("New Government Scheme Update / नई सरकारी योजना अपडेट", {
+                    body: "Click here to see the latest farmer scheme / नवीनतम किसान योजना देखने के लिए यहां क्लिक करें।",
+                    icon: "icon.png",
+                });
+        
+                notification.onclick = function () {
+                    window.open('https://www.india.gov.in/');  // Open the government website
+                };
+            }
+        }
+        
+        // Ask for notification permission when the page loads
+        if (Notification.permission !== "granted") {
+            Notification.requestPermission();
+        }
+        
+        // Periodically check for updates (every 5 minutes)
+        setInterval(checkForUpdates, 300000);
+        
+    </script>
+</body>
+</html>

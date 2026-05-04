@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>{{ title }}</title>
+    <link rel="shortcut icon" href="{{ url_for('static', filename='images/favicon.ico') }}"/>
+
+    <!-- Meta Tags for Responsive Design -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="utf-8">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" crossorigin="anonymous">
+    <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet" type="text/css">
+    <link href="{{ url_for('static', filename='css/font-awesome.min.css') }}" rel="stylesheet">
+
+    <!-- Google Fonts -->
+    <link href="//fonts.googleapis.com/css?family=Roboto:400,500,700" rel="stylesheet">
+
+    <!-- Custom Styles -->
+    <style>
+        /* Global Body Styling */
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: rgb(237, 231, 231); /* Light grey background */
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Navbar Styling */
+        .navbar {
+            background-color: white;
+            height: 80px;
+            padding: 1rem;
+        }
+
+        .navbar-brand img {
+            width: 160px;
+            height: 60px;
+            margin-top: -85px;
+        }
+
+        .navbar-nav .nav-item .nav-link {
+            color: black;
+            font-weight: bolder;
+            margin-right: 1rem;
+            margin-bottom: 60px;
+        }
+
+        .navbar-nav .nav-item .nav-link:hover {
+            color: #ffc107;
+        }
+
+        /* Footer Styling */
+        footer {
+            background-color: white;
+            color: #fff;
+            padding: 2rem 0;
+            text-align: center;
+        }
+
+        footer .logo2 {
+            font-size: 1.75rem;
+            color: #ffc107;
+            font-weight: 700;
+        }
+
+        footer p {
+            margin-bottom: 0;
+            font-size: 0.9rem;
+        }
+
+        .w3l-copy {
+            margin-top: 1rem;
+            font-size: 0.85rem;
+        }
+
+        /* Move to Top Icon */
+        .move-top {
+            display: block;
+            width: 40px;
+            height: 40px;
+            background-color: #ffc107;
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 40px;
+            font-size: 1.5rem;
+            color: #343a40;
+            cursor: pointer;
+        }
+
+        /* Custom Container and Layout */
+        .container {
+            margin-top: 5rem;
+        }
+
+        h1, h2 {
+            color: #333;
+        }
+
+        /* Responsive Typography */
+        @media (max-width: 576px) {
+            h1 {
+                font-size: 1.5rem;
+            }
+
+            h2 {
+                font-size: 1.2rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-dark static-top">
+        <div class="container">
+            <a class="navbar-brand" href="{{ url_for('home') }}">
+                <img src="static\images\logo1.jpg" alt="KrishiSeva Logo">
+            </a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarResponsive">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item active">
+                        <a class="nav-link" href="{{ url_for('home') }}" style="color: black; font-weight: bolder;">Home / होम</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('crop_recommend') }}">Crop / फसल</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('fertilizer_recommendation') }}">Fertilizer / उर्वरक</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('disease_prediction') }}">Disease / रोग</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Dynamic Content Block -->
+    {% block body %} {% endblock %}
+
+    <!-- Footer Section -->
+    <footer class="text-center">
+        <div class="container">
+            <img src="static/images/logo.jpg" style="width: 300px;">
+            <div class="w3l-copy">
+                <p>&copy; 2024 KRISHISEVAK.AI. Made with ❤️ by Team KRISHISEVAK.AI</p>
+                <p>&copy; 2024 KRISHISEVAK.AI. टीम KRISHISEVAK.AI द्वारा ❤️ के साथ बनाया गया</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Move to Top Button -->
+    <a href="#home" class="move-top">&#8679;</a>
+
+    <!-- JavaScript Libraries -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" crossorigin="anonymous"></script>
+</body>
+
+</html>

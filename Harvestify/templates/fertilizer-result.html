@@ -1,0 +1,238 @@
+{% extends 'layout.html' %}
+{% block body %}
+
+<style>
+  /* Body background and font */
+  body {
+    background: linear-gradient(135deg, #141e30, #243b55); 
+    font-family: 'Roboto', sans-serif;
+    margin: 0;
+    padding: 0;
+  }
+
+  /* Navbar adjustment if necessary (if using a fixed navbar) */
+  nav {
+    position: fixed;
+    width: 100%;
+    top: 0;
+    z-index: 1000;
+    background-color: #333;
+    color: white;
+    padding: 10px 0;
+  }
+
+  /* Center the container vertically and horizontally while adjusting for navbar height */
+  .recommendation-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 8px 20px rgb(55, 153, 209); 
+    padding-top: 80px;  /* Adjust to match navbar height */
+    min-height: calc(100vh - 80px);  /* Adjust based on navbar height */
+  }
+
+  /* Card style (AI-like modern design) */
+  .card {
+    background-color: #ffffff;
+    border-radius: 15px;
+    box-shadow: 0 8px 20px rgb(55, 153, 209); 
+    max-width: 800px;
+    width: 100%;
+    padding: 30px;
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+  }
+
+  /* Text area for recommendations */
+  .recommendation-text {
+    font-size: 20px;
+    color: #333;
+    font-weight: 500;
+    line-height: 1.6;
+    margin-bottom: 20px;
+  }
+
+  /* Style for the translated text */
+  .recommendation-text#translated-text {
+    font-size: 18px;
+    color: #444;
+    font-weight: 400;
+    line-height: 1.6;
+    margin-top: 20px;
+  }
+
+  /* Language selection dropdown */
+  .language-select {
+    margin-top: 20px;
+    padding: 12px;
+    font-size: 1rem;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #f5f5f5;
+    color: #333;
+    outline: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+
+  .language-select:hover {
+    background-color: #ddd;
+  }
+
+  /* Stop button style (red, flat design) */
+  .stop-btn {
+    margin-top: 20px;
+    padding: 12px 25px;
+    background-color: #ff4b5c;
+    color: white;
+    font-size: 1rem;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+
+  .stop-btn:hover {
+    background-color: #e6364c;
+  }
+
+  /* Play button style */
+  button {
+    padding: 12px 25px;
+    font-size: 1rem;
+    background-color: #4CAF50;  /* Green */
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+
+  button:hover {
+    background-color: #45a049;
+  }
+
+  /* General transition for hover effects */
+  button, .language-select {
+    transition: transform 0.2s ease;
+  }
+
+  button:active, .language-select:active {
+    transform: scale(0.98);
+  }
+</style>
+
+<div class="recommendation-container">
+  <div class="card">
+    <!-- Original Recommendation Text -->
+    <p class="recommendation-text" id="recommendation-text">{{ recommendation }}</p>
+
+    <!-- Translated Text Display -->
+    <p class="recommendation-text" id="translated-text" style="display: none;"></p>
+
+    <!-- Language selection dropdown -->
+    <select id="language-select" class="language-select" onchange="translateText()">
+      <option value="en-US">English</option>
+      <option value="hi-IN">Hindi</option>
+    </select>
+
+    <!-- Play and Stop buttons -->
+    <button onclick="playRecommendation()">Play Recommendation</button>
+    <button class="stop-btn" onclick="stopRecommendation()">Stop</button>
+  </div>
+</div>
+
+<script>
+let currentUtterance = null;
+
+// Function to fetch Hindi translation using Google Translate unofficial API
+async function getHindiTranslation(text) {
+  try {
+    const response = await fetch(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=hi&dt=t&q=${encodeURIComponent(text)}`, {
+      method: 'GET'
+    });
+
+    if (!response.ok) {
+      console.error('Failed to fetch translation:', response.statusText);
+      return null;
+    }
+
+    const data = await response.json();
+    console.log("Hindi Translation Data:", data);
+
+    // Extract and return the translated text
+    return data[0].map(item => item[0]).join("");
+  } catch (error) {
+    console.error("Error during translation:", error);
+    return null;
+  }
+}
+
+// Function to speak the text in the selected language
+function speakText(text, lang) {
+  if ('speechSynthesis' in window) {
+    window.speechSynthesis.cancel(); // Cancel any ongoing speech
+
+    currentUtterance = new SpeechSynthesisUtterance(text);
+    currentUtterance.lang = lang;
+
+    currentUtterance.onend = () => console.log("Speech finished.");
+    currentUtterance.onerror = (event) => console.error("Speech error:", event);
+
+    window.speechSynthesis.speak(currentUtterance);
+  } else {
+    alert("Speech synthesis is not supported in your browser.");
+  }
+}
+
+// Function to translate the recommendation text and display it if Hindi is selected
+async function translateText() {
+  const recommendationText = document.getElementById('recommendation-text').textContent.trim();
+  const selectedLanguage = document.getElementById('language-select').value;
+  const translatedTextElement = document.getElementById('translated-text');
+
+  if (selectedLanguage === 'hi-IN') {
+    // Fetch the Hindi translation and display it
+    const hindiTranslation = await getHindiTranslation(recommendationText);
+    if (hindiTranslation) {
+      translatedTextElement.textContent = hindiTranslation;
+      translatedTextElement.style.display = 'block';
+    } else {
+      translatedTextElement.textContent = "Translation failed.";
+    }
+  } else {
+    // Hide the translated text when English is selected
+    translatedTextElement.style.display = 'none';
+  }
+}
+
+// Function to play the recommendation in the selected language
+async function playRecommendation() {
+  const recommendationText = document.getElementById('recommendation-text').textContent.trim();
+  const selectedLanguage = document.getElementById('language-select').value;
+
+  if (selectedLanguage === 'hi-IN') {
+    // Fetch and speak the Hindi translation
+    const hindiTranslation = await getHindiTranslation(recommendationText);
+    if (hindiTranslation) {
+      speakText(hindiTranslation, 'hi-IN');
+    }
+  } else {
+    speakText(recommendationText, 'en-US');
+  }
+}
+
+// Function to stop the ongoing speech
+function stopRecommendation() {
+  if ('speechSynthesis' in window) {
+    window.speechSynthesis.cancel();
+  }
+}
+</script>
+
+{% endblock %}

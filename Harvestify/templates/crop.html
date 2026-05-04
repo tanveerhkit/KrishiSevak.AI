@@ -1,0 +1,131 @@
+{% extends 'layout.html' %} 
+{% block body %}
+
+<style>
+  .form-container {
+    width: 100%;
+    max-width: 500px;
+    margin: 5rem auto;
+    padding: 2rem;
+    background-color: rgba(255, 255, 255, 0.85); /* Slightly transparent to see the video */
+    border-radius: 15px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    z-index: 1; /* Make sure the form is above the video */
+    position: relative;
+  }
+  .video-background {
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    min-width: 100%;
+    min-height: 100%;
+    z-index: -1; /* Ensure the video is behind other content */
+    object-fit: cover;
+    filter: brightness(0.5); /* Optional: slightly darken the video for contrast */
+  }
+  body {
+    background-color: transparent; /* Transparent background to allow video to show */
+  }
+</style>
+
+<video autoplay muted loop class="video-background">
+  <source src="https://videos.pexels.com/video-files/4219204/4219204-sd_640_360_25fps.mp4" type="video/mp4">
+</video>
+
+<div class="form-container">
+  <h2 style="text-align: center; margin: 0px; color: black">
+    <b>Find out the most suitable crop to grow in your farm</b>
+  </h2>
+
+  <div style="width: 350px; height: 50rem; margin: 0px auto; color: black; border-radius: 25px; padding: 10px 10px;">
+    <form method="POST" action="{{ url_for('crop_prediction') }}">
+      
+      <div class="form-group">
+        <label for="Nitrogen" style="font-size: 17px"><b>Nitrogen / नाइट्रोजन</b></label>
+        <input type="number" class="form-control" id="Nitrogen" name="nitrogen" placeholder="Enter the value (example:50)" style="font-weight: bold" required />
+      </div>
+      
+      <div class="form-group">
+        <label for="Phosphorous" style="font-size: 17px"><b>Phosphorous / फास्फोरस</b></label>
+        <input type="number" class="form-control" id="Phosphorous" name="phosphorous" placeholder="Enter the value (example:50)" style="font-weight: bold" required />
+      </div>
+
+      <div class="form-group">
+        <label for="Pottasium" style="font-size: 17px"><b>Potassium / पोटेशियम</b></label>
+        <input type="number" class="form-control" id="Pottasium" name="pottasium" placeholder="Enter the value (example:50)" style="font-weight: bold" required />
+      </div>
+      
+      <div class="form-group">
+        <label for="ph" style="font-size: 17px"><b>pH Level / pH स्तर</b></label>
+        <input type="number" step="0.01" class="form-control" id="ph" name="ph" placeholder="Enter the value" style="font-weight: bold" required />
+      </div>
+      
+      <div class="form-group">
+        <label for="Rainfall" style="font-size: 17px"><b>Rainfall (in mm) / वृष्टि (मिमी में)</b></label>
+        <input type="number" step="0.01" class="form-control" id="Rainfall" name="rainfall" placeholder="Enter the value" style="font-weight: bold" required />
+      </div>
+      
+      <div class="form-group">
+        <label for="State" style="font-size: 17px"><b>State</b></label>
+        <select id="sts" name="stt" class="form-control" style="font-weight: bold; color: black" required onchange="updateCities()">
+          <option value="">Select State</option>
+          <option value="Uttar Pradesh">Uttar Pradesh</option>
+          <option value="Punjab">Punjab</option>
+          <option value="Haryana">Haryana</option>
+          <option value="Maharashtra">Maharashtra</option>
+          <option value="Karnataka">Karnataka</option>
+          <option value="Tamil Nadu">Tamil Nadu</option>
+          <option value="Andhra Pradesh">Andhra Pradesh</option>
+          <option value="Gujarat">Gujarat</option>
+        </select>
+      </div>
+      
+      <div class="form-group">
+        <label for="City" style="font-size: 17px"><b>City</b></label>
+        <select id="city" class="form-control" name="city" style="font-weight: bold; color: black" required>
+          <option value="">Select City</option>
+        </select>
+      </div>
+
+      <div class="d-flex justify-content-center">
+        <button type="submit" class="btn btn-info" style="color: black; font-weight: bold; width: 130px; height: 50px; border-radius: 12px; font-size: 21px;">
+          Predict
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+  const statesCities = {
+    "Uttar Pradesh": ["Agra", "Kanpur", "Allahabad", "Lucknow", "Varanasi"],
+    "Punjab": ["Amritsar", "Ludhiana", "Jalandhar", "Patiala", "Bathinda"],
+    "Haryana": ["Ambala", "Faridabad", "Gurugram", "Karnal", "Panipat"],
+    "Maharashtra": ["Pune", "Nagpur", "Mumbai", "Nashik", "Kolhapur"],
+    "Karnataka": ["Bengaluru", "Mysuru", "Hubli", "Mangalore", "Belagavi"],
+    "Tamil Nadu": ["Chennai", "Coimbatore", "Madurai", "Trichy", "Tirunelveli"],
+    "Andhra Pradesh": ["Visakhapatnam", "Vijayawada", "Tirupati", "Guntur", "Kakinada"],
+    "Gujarat": ["Ahmedabad", "Surat", "Vadodara", "Rajkot", "Bhavnagar"]
+  };
+
+  function updateCities() {
+    const stateSelect = document.getElementById("sts");
+    const citySelect = document.getElementById("city");
+    const selectedState = stateSelect.value;
+
+    // Clear previous options
+    citySelect.innerHTML = "<option value=''>Select City</option>";
+
+    if (selectedState) {
+      const cities = statesCities[selectedState];
+      cities.forEach(city => {
+        const option = document.createElement("option");
+        option.value = city;
+        option.textContent = city;
+        citySelect.appendChild(option);
+      });
+    }
+  }
+</script>
+
+{% endblock %}

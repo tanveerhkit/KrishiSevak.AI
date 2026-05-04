@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Water Requirement Calculator</title>
+    <style>
+        /* Global Styles */
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+        }
+
+        h1 {
+            text-align: center;
+            color: #243b55;
+            font-size: 2.5rem;
+            margin-bottom: 30px;
+        }
+
+        h2 {
+            color: #243b55;
+            font-size: 1.5rem;
+        }
+
+        label {
+            display: block;
+            margin: 10px 0 5px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        select, input[type="number"], input[type="submit"] {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 20px;
+            font-size: 1rem;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            box-sizing: border-box;
+        }
+
+        input[type="submit"] {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+
+        .result {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+            border: 1px solid #ddd;
+        }
+
+        .result p {
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+
+        .result strong {
+            color: #243b55;
+        }
+
+        /* Responsive Layout */
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            .result {
+                padding: 15px;
+            }
+
+            input[type="submit"] {
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>Water Requirement Calculator for Crops (फसल के लिए पानी की आवश्यकता कैलकुलेटर)</h1>
+
+    <form id="water-form">
+        <!-- Select Crop -->
+        <label for="crop">Select Crop (फसल चुनें):</label>
+        <select name="crop" id="crop" required>
+            <option value="Wheat">Wheat (गेंहू)</option>
+            <option value="Rice">Rice (चावल)</option>
+            <option value="Cotton">Cotton (कपास)</option>
+            <option value="Maize">Maize (मक्का)</option>
+        </select>
+
+        <!-- Select Growth Stage -->
+        <label for="stage">Select Growth Stage (विकास चरण चुनें):</label>
+        <select name="stage" id="stage" required>
+            <option value="Seedling">Seedling (बीज)</option>
+            <option value="Vegetative">Vegetative (विकास)</option>
+            <option value="Flowering">Flowering (फूलना)</option>
+            <option value="Mature">Mature (पका हुआ)</option>
+        </select>
+
+        <!-- Field Size in Acres -->
+        <label for="field_size">Field Size (in Acres) (क्षेत्र का आकार एकड़ में):</label>
+        <input type="number" name="field_size" id="field_size" min="0" step="0.1" required>
+
+        <!-- Select Emitter Type -->
+        <label for="emitter">Select Emitter Type (इमिटर प्रकार चुनें):</label>
+        <select name="emitter" id="emitter" required>
+            <option value="Drip">Drip Irrigation (ड्रिप सिंचाई)</option>
+            <option value="Sprinkler">Sprinkler (स्प्रिंकलर)</option>
+        </select>
+
+        <!-- Select Flow Rate for Drip Emitters -->
+        <label for="emitter_flow_rate">Emitter Flow Rate (in Liters per Hour) (प्रवाह दर (लीटर प्रति घंटा):</label>
+        <select name="emitter_flow_rate" id="emitter_flow_rate" required>
+            <option value="2">2 Liters per Hour (लीटर प्रति घंटा)</option>
+            <option value="4">4 Liters per Hour (लीटर प्रति घंटा)</option>
+        </select>
+
+        <!-- Submit Button -->
+        <input type="submit" value="Calculate Water Requirement (पानी की आवश्यकता कैलकुलेट करें)">
+    </form>
+
+    <div id="result" class="result" style="display:none;">
+        <h2>Water Requirement Results (पानी की आवश्यकता के परिणाम)</h2>
+        <p><strong>Crop (फसल):</strong> <span id="crop-result"></span></p>
+        <p><strong>Growth Stage (विकास चरण):</strong> <span id="stage-result"></span></p>
+        <p><strong>Field Size (क्षेत्र आकार):</strong> <span id="field-size-result"></span> acres (एकड़)</p>
+        <p><strong>Emitter Type (इमिटर प्रकार):</strong> <span id="emitter-result"></span></p>
+        <p><strong>Emitter Flow Rate (इमिटर प्रवाह दर):</strong> <span id="flow-rate-result"></span> Liters per Hour (लीटर प्रति घंटा)</p>
+        <p><strong>Total Water Requirement (कुल पानी की आवश्यकता):</strong> <span id="water-result"></span> Liters per Day (लीटर प्रति दिन)</p>
+    </div>
+
+    <script>
+        document.getElementById('water-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            // Getting form data
+            var crop = document.getElementById('crop').value;
+            var stage = document.getElementById('stage').value;
+            var fieldSize = parseFloat(document.getElementById('field_size').value);
+            var emitter = document.getElementById('emitter').value;
+            var emitterFlowRate = parseInt(document.getElementById('emitter_flow_rate').value);
+
+            // Simple calculation for water requirement
+            var waterNeededPerAcre;
+            if (crop === 'Wheat') {
+                waterNeededPerAcre = 500; // Example value
+            } else if (crop === 'Rice') {
+                waterNeededPerAcre = 1000;
+            } else if (crop === 'Cotton') {
+                waterNeededPerAcre = 700;
+            } else {
+                waterNeededPerAcre = 600;
+            }
+
+            // Total water requirement (simplified for demo)
+            var totalWater = waterNeededPerAcre * fieldSize;
+
+            // Updating the result in the result div
+            document.getElementById('crop-result').textContent = crop + ' (' + getHindiCrop(crop) + ')';
+            document.getElementById('stage-result').textContent = stage + ' (' + getHindiStage(stage) + ')';
+            document.getElementById('field-size-result').textContent = fieldSize;
+            document.getElementById('emitter-result').textContent = emitter + ' (' + getHindiEmitter(emitter) + ')';
+            document.getElementById('flow-rate-result').textContent = emitterFlowRate;
+            document.getElementById('water-result').textContent = totalWater;
+
+            // Show result div
+            document.getElementById('result').style.display = 'block';
+        });
+
+        // Helper functions to translate to Hindi
+        function getHindiCrop(crop) {
+            switch(crop) {
+                case 'Wheat': return 'गेंहू';
+                case 'Rice': return 'चावल';
+                case 'Cotton': return 'कपास';
+                case 'Maize': return 'मक्का';
+                default: return crop;
+            }
+        }
+
+        function getHindiStage(stage) {
+            switch(stage) {
+                case 'Seedling': return 'बीज';
+                case 'Vegetative': return 'विकास';
+                case 'Flowering': return 'फूलना';
+                case 'Mature': return 'पका हुआ';
+                default: return stage;
+            }
+        }
+
+        function getHindiEmitter(emitter) {
+            switch(emitter) {
+                case 'Drip': return 'ड्रिप सिंचाई';
+                case 'Sprinkler': return 'स्प्रिंकलर';
+                default: return emitter;
+            }
+        }
+    </script>
+
+</body>
+</html>

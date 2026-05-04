@@ -1,0 +1,111 @@
+{% extends 'layout.html' %}
+{% block body %}
+
+<style>
+  /* Video Background */
+  .video-background {
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    min-width: 100%;
+    min-height: 100%;
+    z-index: -1; /* Ensure the video stays behind content */
+    object-fit: cover;
+    filter: brightness(0.5); /* Optional: Adjust brightness for better contrast */
+  }
+
+  body {
+    background-color: transparent; /* Ensure transparency to show the video */
+  }
+
+  .form-container {
+    width: 100%;
+    max-width: 400px;
+    margin: 5rem auto;
+    padding: 2rem;
+    background-color: rgba(255, 255, 255, 0.85); /* Semi-transparent to show the video */
+    border-radius: 15px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    z-index: 1; /* Make sure the form is above the video */
+    position: relative;
+  }
+
+  .form-title {
+    text-align: center;
+    color: black;
+    font-weight: bold;
+    margin-bottom: 2rem;
+  }
+
+  .custom-file-input {
+    font-weight: bold;
+    display: block;
+    width: 100%;
+    margin-bottom: 1.5rem;
+  }
+
+  .preview-image {
+    display: block;
+    width: 100%;
+    height: auto;
+    max-height: 300px;
+    margin: 2rem 0;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  }
+
+  .btn-submit {
+    background-color: #007bff;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    font-weight: bold;
+    width: 100%;
+    border-radius: 8px;
+    color: white;
+    transition: background-color 0.3s ease;
+  }
+
+  .btn-submit:hover {
+    background-color: #0056b3;
+  }
+</style>
+
+<!-- Video Background -->
+<video autoplay muted loop class="video-background">
+  <source src="https://media.istockphoto.com/id/1658694160/video/early-blight-disease-and-colorado-potato-beetle-on-crops.mp4?s=mp4-640x640-is&k=20&c=a8-0aWCu0K9vlBBNces3tGgRAj9-zumeSZ6rmbOnqmE=" type="video/mp4">
+  Your browser does not support the video tag.
+</video>
+
+<!-- Form Section -->
+<div class="container">
+  <div class="form-container">
+    <h2 class="form-title">
+      Find out which disease has affected your plant / अपने पौधे को किस रोग ने प्रभावित किया है, जानें
+    </h2>
+    <form method="POST" enctype="multipart/form-data">
+      <label for="file" class="h4 mb-3 font-weight-normal">
+        Upload Image of the Plant / पौधे की छवि अपलोड करें
+      </label>
+      <input type="file" name="file" class="form-control-file custom-file-input" id="inputfile" onchange="preview_image(event)" required>
+
+      <img id="output-image" class="preview-image" />
+
+      <button type="submit" class="btn btn-submit">
+        Predict / प्रीडिक्ट करें
+      </button>
+    </form>
+  </div>
+</div>
+
+<script type="text/javascript">
+  function preview_image(event) {
+    var reader = new FileReader();
+    reader.onload = function () {
+      var output = document.getElementById('output-image');
+      output.src = reader.result;
+    }
+    reader.readAsDataURL(event.target.files[0]);
+  }
+</script>
+
+{% endblock %}

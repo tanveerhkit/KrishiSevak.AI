@@ -1,0 +1,100 @@
+{% extends 'layout.html' %}
+{% block body %}
+
+<!-- banner -->
+<section class="banner_w3lspvt" id="home">
+    <div class="csslider infinity" id="slider1">
+        <div class="banner-top">
+            <video autoplay loop muted playsinline class="video-background">
+                <source src="static\vedios\218951_small.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+            <div class="overlay">
+                <div class="container">
+                    <div class="w3layouts-banner-info text-center">
+                        <h3 class="text-wh" style="font-size: 3rem; font-weight: 700;">KrishiSevak.AI</h3>
+                        <h4 class="text-wh mx-auto my-4" style="font-size: 1.5rem; max-width: 600px;">
+                            <b>Get informed decisions about your farming strategy.</b><br>
+                            <b>कृषि रणनीति के बारे में सूचित निर्णय प्राप्त करें।</b>
+                        </h4>
+                        <h4 class="text-wh mx-auto my-4"><strong>Here are some questions we'll answer</strong><br><strong>यहां कुछ सवाल हैं जिनका हम उत्तर देंगे</strong></h4>
+                        <p class="text-li mx-auto mt-2" style="font-size: 1.2rem; max-width: 500px;">
+                            1. What crop to plant here? <br>
+                            <strong>यहां कौन सी फसल उगानी चाहिए?</strong><br>
+                            2. What fertilizer to use? <br>
+                            <strong>कौन सा उर्वरक उपयोग करें?</strong><br>
+                            3. Which disease does your crop have? <br>
+                            <strong>आपकी फसल को कौन सी बीमारी है?</strong><br>
+                            4. How to cure the disease? <br>
+                            <strong>बीमारी का इलाज कैसे करें?</strong>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- //banner -->
+
+<!-- core values -->
+
+
+<section class="core-value py-5">
+    <div class="container py-md-4">
+        <h3 class="heading mb-sm-5 mb-4 text-center" style="font-size: 2rem;">About Us</h3>
+        <div class="row core-grids">
+            <div class="col-lg-6 core-left">
+                <img src="{{ url_for('static', filename='images/core.jpg') }}" class="img-fluid rounded" alt="Core Values" />
+            </div>
+            <div class="col-lg-6 core-right">
+                <h3 class="mt-4" style="font-size: 1.8rem;">Improving Agriculture, Improving Lives, Cultivating Crops To Make Farmers Increase Profit.</h3>
+                <p class="mt-3" style="font-size: 1.2rem; line-height: 1.8;">We use state-of-the-art machine learning and deep learning technologies to guide you through the entire farming process. Make informed decisions to understand the demographics of your area, understand the factors that affect your crop, and keep them healthy for a successful yield.</p>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- //core values -->
+
+<!-- Products & Services -->
+<section class="blog py-5" id="services">
+    <div class="container py-md-5">
+        <h3 class="heading mb-sm-5 mb-4 text-center" style="font-size: 2rem;">Our Services / हमारी सेवाएं</h3>
+        <div class="row blog-grids">
+            <div class="col-lg-4 col-md-6 mb-lg-0 mb-sm-5 pb-lg-0 pb-5">
+                <div class="service-card shadow-lg rounded p-3">
+                    <img src="{{ url_for('static', filename='images/s3.jpg') }}" class="img-fluid rounded mb-3" alt="Crop Recommendation" />
+                    <a href="{{ url_for('crop_recommend') }}">
+                        <h4 class="text-center">Crop Recommendation / फसल अनुशंसा</h4>
+                        <p class="mt-2 text-center">Recommendation about the type of crops best suited for your farming conditions.</p>
+                        <p class="mt-2 text-center"><strong>आपकी कृषि परिस्थितियों के लिए सबसे उपयुक्त फसल के प्रकार के बारे में अनुशंसा।</strong></p>
+                    </a>
+                </div>
+            </div>
+
+            <div class="col-lg-4 col-md-6 mb-lg-0 mb-sm-5 pb-lg-0 pb-5">
+                <div class="service-card shadow-lg rounded p-3">
+                    <img src="{{ url_for('static', filename='images/s2.jpg') }}" class="img-fluid rounded mb-3" alt="Fertilizer Recommendation" />
+                    <a href="{{ url_for('fertilizer_recommendation') }}">
+                        <h4 class="text-center">Fertilizer Recommendation / उर्वरक अनुशंसा</h4>
+                        <p class="mt-2 text-center">Get advice on the best fertilizer based on your soil and crop type.</p>
+                        <p class="mt-2 text-center"><strong>अपने मिट्टी और फसल प्रकार के आधार पर सबसे अच्छा उर्वरक पाने के लिए सलाह प्राप्त करें।</strong></p>
+                    </a>
+                </div>
+            </div>
+
+            <div class="col-lg-4 col-md-6 mt-lg-0 mt-5 pt-lg-0 pt-md-5">
+                <div class="service-card shadow-lg rounded p-3">
+                    <img src="{{ url_for('static', filename='images/s4.jpg') }}" class="img-fluid rounded mb-3" alt="Crop Disease Prediction" />
+                    <a href="{{ url_for('disease_prediction') }}">
+                        <h4 class="text-center">Crop Disease Prediction / फसल रोग की भविष्यवाणी</h4>
+                        <p class="mt-2 text-center">Predict crop diseases and get recommendations for treatment and prevention.</p>
+                        <p class="mt-2 text-center"><strong>फसल रोगों की भविष्यवाणी करें और उपचार और निवारण के लिए अनुशंसा प्राप्त करें।</strong></p>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- //Products & Services -->
+
+{% endblock %}

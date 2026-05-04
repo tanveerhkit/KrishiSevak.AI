@@ -1,0 +1,199 @@
+{% extends 'layout.html' %}
+{% block body %}
+
+<style>
+  /* Main Container with Gradient Background */
+
+  body{
+    background: linear-gradient(135deg, #141e30, #243b55); 
+  }
+  .result-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: linear-gradient(135deg, #141e30, #243b55); /* Dark blue gradient */
+    color: #e0e0e0;
+    font-family: 'Roboto', sans-serif;
+  }
+
+  /* Card Body with Glassy, Futuristic Style */
+  .card-body {
+    background: rgba(255, 255, 255, 0.1); /* Semi-transparent white for glass effect */
+    backdrop-filter: blur(10px); /* Adds a glass effect */
+    padding: 3rem;
+    border-radius: 20px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3); /* Dark shadow for depth */
+    max-width: 600px;
+    text-align: center;
+    position: relative;
+  }
+
+  /* Heading with Soft Glow */
+  .card-body h1 {
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: #00d2ff; /* Aqua-blue text for a tech look */
+    text-shadow: 0 0 8px rgba(0, 210, 255, 0.5); /* Soft glow */
+  }
+
+  .card-body i {
+    font-style: italic;
+    color: #00d2ff;
+    font-size: 1.8rem;
+  }
+
+  /* Futuristic Dropdown and Button Styling */
+  .form-group label {
+    color: #e0e0e0;
+    font-weight: bold;
+  }
+
+  .btn {
+    font-size: 18px;
+    padding: 12px 24px;
+    border-radius: 8px;
+    background: linear-gradient(135deg, #00d2ff, #3a7bd5); /* Gradient button */
+    color: white;
+    border: none;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    box-shadow: 0 5px 15px rgba(0, 210, 255, 0.4); /* Glow effect */
+  }
+
+  .btn:hover {
+    background-color: #3a7bd5;
+    transform: scale(1.05); /* Slight enlarge on hover */
+  }
+</style>
+
+<div class="container py-5 mx-auto">
+  <div class="result-container">
+    <div class="card card-body">
+      <h1 class="text-center" id="predictionText">
+        <b>You should grow <i>{{ prediction }}</i> in your farm</b>
+      </h1>
+      <div id="translatedPredictionText" style="display: none;"></div>
+
+      <!-- Language Selection Dropdown -->
+      <div class="form-group mt-4">
+        <label for="languageSelect">Select Language:</label>
+        <select id="languageSelect" class="form-control" style="display: inline; width: auto;" onchange="speakPrediction()">
+          <option value="hi-IN">Hindi</option>
+          <option value="en-US">English</option>
+        </select>
+      </div>
+      
+      <!-- Button to trigger text-to-speech -->
+      <button class="btn mt-3" onclick="speakPrediction()">
+        Listen to Prediction
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Crop names dictionary for Hindi translation
+  const cropNamesInHindi = {
+    "Wheat": "गेहूं",
+    "Rice": "चावल",
+    "Corn": "मक्का",
+    "Paddy": "धान",
+    "Barley": "जौ",
+    "Oats": "जई",
+    "Millet": "बाजरा",
+    "Sorghum": "ज्वार",
+    "Rye": "राई",
+    "Cotton": "कपास",
+    "Sugarcane": "गन्ना",
+    "Potato": "आलू",
+    "Tomato": "टमाटर",
+    "Onion": "प्याज",
+    "Garlic": "लहसुन",
+    "Peas": "मटर",
+    "Lentils": "मसूर",
+    "Chickpea": "चने",
+    "Soybean": "सोयाबीन",
+    "Groundnut": "मूंगफली",
+    "Sunflower": "सूरजमुखी",
+    "Mustard": "सरसों",
+    "Tobacco": "तंबाकू",
+    "Ginger": "अदरक",
+    "Turmeric": "हल्दी",
+    "Cabbage": "पत्तागोभी",
+    "Cauliflower": "फूलगोभी",
+    "Brinjal": "बैंगन",
+    "Spinach": "पालक",
+    "Coriander": "धनिया",
+    "Fenugreek": "मेथी",
+    "Bitter Gourd": "करेला",
+    "Pumpkin": "कद्दू",
+    "Cucumber": "खीरा",
+    "Carrot": "गाजर",
+    "Radish": "मूली",
+    "Watermelon": "तरबूज",
+    "Mango": "आम",
+    "Apple": "सेब",
+    "Banana": "केला",
+    "Grapes": "अंगूर",
+    "Orange": "संतरा",
+    "Papaya": "पपीता",
+    "coffee":"कॉफ़ी",
+    "Pineapple": "अनानास",
+    "Pomegranate": "अनार",
+    "Pigeonpeas": "अरहर"
+  };
+
+  // Function to get crop name in Hindi if available
+  function getCropNameInHindi(cropName) {
+    const cropNamesInHindiNormalized = Object.fromEntries(
+      Object.entries(cropNamesInHindi).map(([key, value]) => [key.toLowerCase(), value])
+    );
+    return cropNamesInHindiNormalized[cropName.toLowerCase()] || cropName;
+  }
+
+  function speakPrediction() {
+    const predictionText = document.getElementById("predictionText").innerText;
+    const language = document.getElementById("languageSelect").value;
+
+    // Extract crop name from the predictionText
+    const cropNameMatch = predictionText.match(/You should grow (.*?) in your farm/);
+    let cropName = cropNameMatch ? cropNameMatch[1].trim() : null;
+
+    // Get the translated crop name
+    let speechText;
+    if (cropName) {
+      const cropNameInHindi = getCropNameInHindi(cropName);
+
+      if (language === "hi-IN") {
+        speechText = `आपको अपनी खेती में ${cropNameInHindi} उगाना चाहिए`;
+        document.getElementById("translatedPredictionText").innerText = speechText;
+        document.getElementById("translatedPredictionText").style.display = "block";
+      } else {
+        speechText = `You should grow ${cropName} in your farm`;
+        document.getElementById("translatedPredictionText").style.display = "none";
+      }
+    } else {
+      speechText = "Unable to find a translation for the selected crop.";
+      console.log("Crop name not found.");
+    }
+
+    // Set up and configure the speech synthesis
+    const speech = new SpeechSynthesisUtterance(speechText);
+    speech.lang = language;
+    speech.volume = 1;
+    speech.rate = language === "hi-IN" ? 1.1 : 1;
+
+    // Select appropriate voice for language
+    const voices = window.speechSynthesis.getVoices();
+    speech.voice = voices.find(voice => voice.lang === language) || voices[0];
+
+    window.speechSynthesis.cancel(); // Clear any previous speech
+    window.speechSynthesis.speak(speech);
+  }
+
+  // Load voices on page load and set Hindi as the default language
+  window.speechSynthesis.onvoiceschanged = () => {
+    document.getElementById("languageSelect").value = "hi-IN";
+    speakPrediction(); // Speak prediction in Hindi on first load
+  };
+</script>{% endblock %}
